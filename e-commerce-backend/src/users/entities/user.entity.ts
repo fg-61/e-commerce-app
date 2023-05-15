@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, DeleteDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User {
@@ -26,4 +26,7 @@ export class User {
         default: '',
     })
     password: string;
+
+    @DeleteDateColumn({ nullable: true })
+    deletedAt: Date;
 }
