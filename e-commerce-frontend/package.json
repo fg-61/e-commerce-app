@@ -10,8 +10,23 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.0",
+    "@mantine/carousel": "^6.0.11",
+    "@mantine/core": "^6.0.11",
+    "@mantine/dates": "^6.0.11",
+    "@mantine/dropzone": "^6.0.11",
+    "@mantine/form": "^6.0.11",
+    "@mantine/hooks": "^6.0.11",
+    "@mantine/modals": "^6.0.11",
+    "@mantine/notifications": "^6.0.11",
+    "@mantine/prism": "^6.0.11",
+    "@tanstack/react-query": "^4.29.7",
+    "@tanstack/react-query-devtools": "^4.29.7",
+    "dayjs": "^1.11.7",
+    "embla-carousel-react": "^8.0.0-rc03",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.11.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",
