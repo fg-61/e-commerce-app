@@ -1,34 +1,89 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react"
+
+type UserPropsWithId = { id: string, username: string, email: string, password: string }
+type UserProps = Omit<UserPropsWithId, 'id'>
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [data, setData] = useState<UserPropsWithId[]>([])
+  const [user, setUser] = useState<UserProps>({
+    username: '',
+    email: '',
+    password: ''
+  })
+
+  const getUsers = () => {
+    fetch('http://localhost:3000/users').then((response) => response.json()).then(data => { console.log(data); setData(data) })
+  }
+
+  useEffect(() => {
+    getUsers()
+  }, [])
+
+  const handleChange = (value: string, type: keyof UserProps) => {
+    setUser(prev => ({
+      ...prev,
+      [type]: value
+    }));
+  }
+
+  const handleSubmit = () => {
+    fetch('http://localhost:3000/users',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(user)
+      })
+      .then((response) => response.json())
+      .then(data => console.log(data))
+  }
+
+  const handleDelete = async (id: string) => {
+    await fetch(`http://localhost:3000/users/${id}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(user)
+    })
+    getUsers()
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div style={{ display: 'flex', flexWrap: 'wrap', marginLeft: 40 }}>
+      <div style={{ maxWidth: '50%', boxSizing: 'border-box', minWidth: 800 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', minWidth: 800 }}>
+          <p style={{ width: 50 }}>ID</p>
+          <p style={{ width: 200 }}>İsim</p>
+          <p style={{ width: 200 }}>E-mail</p>
+          <p style={{ width: 150 }}>Şifre</p>
+          <p style={{ width: 80 }}></p>
+        </div>
+        {data.map(user =>
+          <div key={user.id} style={{ display: 'flex', justifyContent: 'space-between', minWidth: 800, paddingTop: 10, paddingBottom: 10 }}>
+            <p style={{ width: 50 }}>{user.id}</p>
+            <p style={{ width: 200 }}>{user.username}</p>
+            <p style={{ width: 200 }}>{user.email}</p>
+            <p style={{ width: 150 }}>{user.password}</p>
+            <button style={{ width: 80, height: 30, color: 'white', backgroundColor: '#E43843', border: 'none', fontWeight: 'bold', borderRadius: 3, cursor: 'pointer' }} onClick={() => handleDelete(user.id)}>Sil</button>
+          </div>
+        )}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div style={{ maxWidth: '50%', margin: 20, padding: 20, height: 220, backgroundColor: 'whitesmoke' }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: 320, height: 200, padding: 10 }}>
+          <div>
+            <span style={{ width: 120, display: 'inline-block' }}>Kullanıcı Adı</span>:
+            <input type="text" value={user.username} onChange={(event) => handleChange(event.target.value, 'username')} style={{ marginLeft: 10 }} />
+          </div>
+          <div>
+            <span style={{ width: 120, display: 'inline-block' }}>E-mail</span>:
+            <input type="text" value={user.email} onChange={(event) => handleChange(event.target.value, 'email')} style={{ marginLeft: 10 }} />
+          </div>
+          <div>
+            <span style={{ width: 120, display: 'inline-block' }}>Şifre</span>:
+            <input type="text" value={user.password} onChange={(event) => handleChange(event.target.value, 'password')} style={{ marginLeft: 10 }} />
+          </div>
+          <input type='submit' value="Kaydet" style={{ alignSelf: 'end', padding: 10, width: 140, backgroundColor: '#3DA933', color: 'white', fontWeight: 'bold', border: 'none', borderRadius: 3, cursor: 'pointer' }} />
+        </form>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
 
