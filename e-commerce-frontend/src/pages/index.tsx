@@ -1,9 +1,7 @@
-import { Box } from '@mantine/core'
-
-const Index = () => {
+const Hello = () => {
     return (
-        <Box>Proje Başladı</Box>
+        <div>Hello</div>
     )
 }
 
-export default Index
+export default Hello
